@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.2.16, July 29, 2021
+* Added: Operator field added for multi-op activations
+* Changed: Re-wrote function qsoToStr eliminate if/else and chained together string construction
+
 ## Version 0.2.15, May 19, 2021
 * Added: License CC BY-NC-ND 3.0
 * Removed POTA copyrighted images
