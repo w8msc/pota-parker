@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.17, Aug 9, 2021
+* Changed: Fix gitignore
+
 ## Version 0.2.16, July 29, 2021
 * Added: Operator field added for multi-op activations
 * Changed: Re-wrote function qsoToStr eliminate if/else and chained together string construction

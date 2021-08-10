@@ -1046,3 +1046,8 @@ INFO:root:20210801-212546: QSO by station W8MSC
 INFO:root:20210801-212552: QSO by station W8MSC 
 INFO:root:20210801-212607: QSO by station W8MSC 
 INFO:root:20210801-212615: QSO by station W8MSC 
+DEBUG:root:Begin DEBUG logging
+DEBUG:root:Begin DEBUG logging
+INFO:root:20210805-014908: QSO by station W8MSC 
+INFO:root:20210805-014944: QSO by station W8MSC 
+INFO:root:20210805-015023: QSO by station W8MSC 
