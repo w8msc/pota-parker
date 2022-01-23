@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.19, Jan 23, 2022
+* Added: Enforce only valid characters in callsigns and park references
+* Changed: Rename callbacks for trace functions
 ## Version 0.2.18, Jan 23, 2022
 * Added: convert callsigns and parks to upper case
 * Changed: Copyright year
