@@ -27,7 +27,7 @@ validModes = [
     "CW", "FM", "SSB"
 ]
 
-validYears = [2016, 2017, 2018, 2019, 2020, 2021]
+validYears = [2016, 2017, 2018, 2019, 2020, 2021, 2022]
 
 validMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
@@ -46,6 +46,9 @@ validSeconds = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
     30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59
 ]
+
+validCallsignCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/"
+validReferenceCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,"
 
 APPTITLE = "POTA Field Logger"
 # WINDOWSIZE="700x350"
@@ -130,7 +133,8 @@ def addentry(event=None):
         STARTDATE = qso["qso_date"]
 
     if checkRequiredFields():
-        qsotext = (datetimeString() + "QSO by station {} ".format(qso["station_callsign"]))
+        qsotext = (datetimeString() +
+                   "QSO by station {} ".format(qso["station_callsign"]))
         if "operator" in qso:
             qsotext + ("operator {}".format(qso["operator"]))
         qsotext + (" on date {} at time {} at park {} with {} ".format(
@@ -457,30 +461,51 @@ def updateStatusBar():
     )
     statusbar.config(text=str)
 
-def upperStationCallsign(*args):
-    """ Convert whatever is in station callsign to upper case """
-    temp = stationStr.get().upper()
+
+def callbackStationCallsign(*args):
+    """ Convert whatever is in station callsign to upper case and enforce only valid characters """
+    temp = ""
+    for char in stationStr.get().upper():
+        if char in validCallsignCharacters:
+            temp += char
     stationStr.set(temp)
 
-def upperOperatorCallsign(*args):
-    """ Convert whatever is in operator callsign to upper case """
-    temp = operatorStr.get().upper()
+
+def callbackOperatorCallsign(*args):
+    """ Convert whatever is in operator callsign to upper case and enforce only valid characters """
+    temp = ""
+    for char in operatorStr.get().upper():
+        if char in validCallsignCharacters:
+            temp += char
     operatorStr.set(temp)
 
-def upperHunterCallsign(*args):
-    """ Convert whatever is in hunter callsign to upper case """
-    temp = callStr.get().upper()
+
+def callbackHunterCallsign(*args):
+    """ Convert whatever is in hunter callsign to upper case and enforce only valid characters """
+    temp = ""
+    for char in callStr.get().upper():
+        if char in validCallsignCharacters:
+            temp += char
     callStr.set(temp)
 
-def upperMyPark(*args):
-    """ Convert whatever is in my park to upper case """
-    temp = parkStr.get().upper()
+
+def callbackMyPark(*args):
+    """ Convert whatever is in my park to upper case and enforce only valid characters """
+    temp = ""
+    for char in parkStr.get().upper():
+        if char in validReferenceCharacters:
+            temp += char
     parkStr.set(temp)
 
-def upperTheirPark(*args):
-    """ Convert whatever is in their park to upper case """
-    temp = p2pStr.get().upper()
+
+def callbackTheirPark(*args):
+    """ Convert whatever is in their park to upper case and enforce only valid characters """
+    temp = ""
+    for char in p2pStr.get().upper():
+        if char in validReferenceCharacters:
+            temp += char
     p2pStr.set(temp)
+
 
 def warningMsg():
     """ Display an About message box """
@@ -697,17 +722,17 @@ app.config(menu=menu)
 stL = Label(app, text="My Station Call").grid(row=0, column=0)
 stE = Entry(app, textvariable=stationStr)
 stE.grid(row=1, column=0)
-stationStr.trace('w',upperStationCallsign)
+stationStr.trace('w', callbackStationCallsign)
 
 opL = Label(app, text="Operator").grid(row=0, column=1)
 opE = Entry(app, textvariable=operatorStr)
 opE.grid(row=1, column=1)
-operatorStr.trace('w',upperOperatorCallsign)
+operatorStr.trace('w', callbackOperatorCallsign)
 
 pL = Label(app, text="My Park").grid(row=0, column=2)
 pE = Entry(app, textvariable=parkStr)
 pE.grid(row=1, column=2)
-parkStr.trace('w',upperMyPark)
+parkStr.trace('w', callbackMyPark)
 
 yearL = Label(app, text="Year").grid(row=0, column=3)
 yearE = Entry(app, width=4, textvariable=yearInt, state='disabled')
@@ -742,7 +767,7 @@ secondE.grid(row=1, column=8, sticky="ew")
 cL = Label(app, text="Call").grid(row=2, column=0)
 cE = Entry(app, textvariable=callStr)
 cE.grid(row=3, column=0)
-callStr.trace('w',upperHunterCallsign)
+callStr.trace('w', callbackHunterCallsign)
 
 # the mode and band being used
 bL = Label(app, text='Band')
@@ -759,7 +784,7 @@ p2pL = Label(app, text="Their Park")
 p2pL.grid(row=2, column=1)
 p2pE = Entry(app, textvariable=p2pStr)
 p2pE.grid(row=3, column=1)
-p2pStr.trace('w',upperTheirPark)
+p2pStr.trace('w', callbackTheirPark)
 
 comL = Label(app, text="Comment")
 comL.grid(row=2, column=2)
