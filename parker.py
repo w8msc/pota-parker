@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # POTA Field Logger, "Parker"
-# Copyright 2021 Mike Case, W8MSC
+# Copyright 2022 Mike Case, W8MSC
 
 # Basic field logging program
 # Takes the required minimum fields for a QSO and logs them to an ADIF
@@ -52,9 +52,9 @@ APPTITLE = "POTA Field Logger"
 
 # Globals
 info = {}
-info['programversion'] = '0.2.16'
+info['programversion'] = '0.2.17'
 info['programid'] = "POTA Field Logger"
-info['copyrightYear'] = '2021'
+info['copyrightYear'] = '2022'
 logbook = []
 
 # Store the Station callsign, park, and date of the first QSO
@@ -457,6 +457,30 @@ def updateStatusBar():
     )
     statusbar.config(text=str)
 
+def upperStationCallsign(*args):
+    """ Convert whatever is in station callsign to upper case """
+    temp = stationStr.get().upper()
+    stationStr.set(temp)
+
+def upperOperatorCallsign(*args):
+    """ Convert whatever is in operator callsign to upper case """
+    temp = operatorStr.get().upper()
+    operatorStr.set(temp)
+
+def upperHunterCallsign(*args):
+    """ Convert whatever is in hunter callsign to upper case """
+    temp = callStr.get().upper()
+    callStr.set(temp)
+
+def upperMyPark(*args):
+    """ Convert whatever is in my park to upper case """
+    temp = parkStr.get().upper()
+    parkStr.set(temp)
+
+def upperTheirPark(*args):
+    """ Convert whatever is in their park to upper case """
+    temp = p2pStr.get().upper()
+    p2pStr.set(temp)
 
 def warningMsg():
     """ Display an About message box """
@@ -673,14 +697,17 @@ app.config(menu=menu)
 stL = Label(app, text="My Station Call").grid(row=0, column=0)
 stE = Entry(app, textvariable=stationStr)
 stE.grid(row=1, column=0)
+stationStr.trace('w',upperStationCallsign)
 
 opL = Label(app, text="Operator").grid(row=0, column=1)
 opE = Entry(app, textvariable=operatorStr)
 opE.grid(row=1, column=1)
+operatorStr.trace('w',upperOperatorCallsign)
 
 pL = Label(app, text="My Park").grid(row=0, column=2)
 pE = Entry(app, textvariable=parkStr)
 pE.grid(row=1, column=2)
+parkStr.trace('w',upperMyPark)
 
 yearL = Label(app, text="Year").grid(row=0, column=3)
 yearE = Entry(app, width=4, textvariable=yearInt, state='disabled')
@@ -715,6 +742,7 @@ secondE.grid(row=1, column=8, sticky="ew")
 cL = Label(app, text="Call").grid(row=2, column=0)
 cE = Entry(app, textvariable=callStr)
 cE.grid(row=3, column=0)
+callStr.trace('w',upperHunterCallsign)
 
 # the mode and band being used
 bL = Label(app, text='Band')
@@ -734,6 +762,7 @@ p2pL = Label(app, text="Their Park")
 p2pL.grid(row=2, column=1)
 p2pE = Entry(app, textvariable=p2pStr)
 p2pE.grid(row=3, column=1)
+p2pStr.trace('w',upperTheirPark)
 
 comL = Label(app, text="Comment")
 comL.grid(row=2, column=2)
