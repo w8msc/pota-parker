@@ -52,7 +52,7 @@ APPTITLE = "POTA Field Logger"
 
 # Globals
 info = {}
-info['programversion'] = '0.2.17'
+info['programversion'] = '0.2.18'
 info['programid'] = "POTA Field Logger"
 info['copyrightYear'] = '2022'
 logbook = []
@@ -755,9 +755,6 @@ mL.grid(row=0, column=10)
 modes = OptionMenu(app, modeStr, *validModes, command=modecallback)
 modes.grid(row=1, column=10)
 
-bAdd = Button(app, text="Add QSO", command=addentry).grid(row=3, column=9)
-bQuit = Button(app, text="Quit", command=goodbye).grid(row=3, column=10)
-
 p2pL = Label(app, text="Their Park")
 p2pL.grid(row=2, column=1)
 p2pE = Entry(app, textvariable=p2pStr)
@@ -768,6 +765,9 @@ comL = Label(app, text="Comment")
 comL.grid(row=2, column=2)
 comE = Entry(app, textvariable=commentStr)
 comE.grid(row=3, column=2, columnspan=4, sticky="ew")
+
+bAdd = Button(app, text="Add QSO", command=addentry).grid(row=3, column=9)
+bQuit = Button(app, text="Quit", command=goodbye).grid(row=3, column=10)
 
 modeL = Label(app, text="Time Entry Mode").grid(row=2, column=6, columnspan=2)
 r1 = Radiobutton(app, text="Live", variable=liveLogging,
