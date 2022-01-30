@@ -522,6 +522,9 @@ def wipeQSO(event):
     resetCall()
     resetComment()
     resetP2P()
+    
+    # focus back on hunter call sign entry
+    cE.focus_set()
 
 
 def writeADIF():
