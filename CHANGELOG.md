@@ -1,8 +1,18 @@
 # Changelog
 
+## Version 0.2.22, May 12, 2022
+* Added: Print platform info in debug log
+## Version 0.2.21, Feb 4, 2022
+* Added: Display QSOs in text widget
+* Changed: Display version in title bar
+
+## Version 0.2.20, Jan 29, 2022
+* Changed:  Wipe QSO now moves focus to hunter call entry
+
 ## Version 0.2.19, Jan 23, 2022
 * Added: Enforce only valid characters in callsigns and park references
 * Changed: Rename callbacks for trace functions
+
 ## Version 0.2.18, Jan 23, 2022
 * Added: convert callsigns and parks to upper case
 * Changed: Copyright year

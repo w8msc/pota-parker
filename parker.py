@@ -6,13 +6,16 @@
 # Basic field logging program
 # Takes the required minimum fields for a QSO and logs them to an ADIF
 
+import platform
 
 try:
     import logging
     import datetime
     from tkinter import *
+    from tkinter import ttk
     from tkinter import messagebox
     import os
+    import json
     #import sqlite3
 except ImportError:
     print("You are not using Python 3")
@@ -53,9 +56,11 @@ validReferenceCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,"
 APPTITLE = "POTA Field Logger"
 # WINDOWSIZE="700x350"
 
+PLATFORM=platform.platform()
+
 # Globals
 info = {}
-info['programversion'] = '0.2.18'
+info['programversion'] = '0.2.22'
 info['programid'] = "POTA Field Logger"
 info['copyrightYear'] = '2022'
 logbook = []
@@ -69,6 +74,7 @@ STARTDATETIME = ""
 # start logging
 logging.basicConfig(filename='parker.log', level=logging.DEBUG)
 logging.debug("Begin DEBUG logging")
+logging.debug("Platform: " + PLATFORM)
 
 
 def aboutMsg():
@@ -152,6 +158,17 @@ def addentry(event=None):
         ))
         print(qsotext)
         logbook.append(qso)
+        
+        # dump qso as string into text widget
+        temp=f'{qso["qso_date"]} {qso["time_on"]} {qso["call"]} {qso["band"]} {qso["mode"]}\n'
+        console_text.insert(END,temp)
+        console_text.see('end')
+        
+        temp=(qso["qso_date"],qso["time_on"],qso["call"],qso["band"],qso["mode"])
+        
+#        tree.insert('',END, values=temp)
+#        tree.see('end')
+        
         logging.info(qsotext)
         print(qso)
         resetP2P()
@@ -707,7 +724,7 @@ secondInt = IntVar()
 liveLogging = BooleanVar()
 liveLogging.set(True)
 
-app.title(APPTITLE)
+app.title(f'{APPTITLE} {info["programversion"]}') 
 # app.geometry(WINDOWSIZE)
 
 # create the menubar
@@ -808,9 +825,44 @@ r2.grid(row=3, column=7)
 blankRow = Label(app, text=" ")
 blankRow.grid(row=6, column=0)
 
+""" columns=('Date','Time','Call','Band','Mode')
+tree=ttk.Treeview(app,columns=columns,show='headings')
+tree.heading('Date',text='Date')
+tree.column('Date',minwidth=0,width=80)
+tree.heading('Time',text='Time')
+tree.column('Time',minwidth=0,width=60)
+tree.heading('Call',text='Call')
+tree.column('Call',minwidth=0,width=120)
+tree.heading('Band',text='Band')
+tree.column('Band',minwidth=0,width=60)
+tree.heading('Mode',text='Mode')
+tree.column('Mode',minwidth=0,width=60)
+tree.grid(row=7,column=0,columnspan=11)
+
+tree_scroll_bar=ttk.Scrollbar(app,orient=VERTICAL,command=tree.yview)
+tree.configure(yscroll=tree_scroll_bar.set)
+tree_scroll_bar.grid(row=7,column=11,sticky='ns') """
+
+
+
+# console_frame = ttk.LabelFrame(app,text='Console')
+# console_frame.grid(row=7,column=0,columnspan=11,sticky='ew')
+
+# test_label=Label(console_frame,text='Test label').grid()
+
+# tree=ttk.Treeview(app)
+# tree.grid(row=7,column=0,columnspan=11,sticky="ew")
+
+console_text=Text(app,height=5)
+console_text.grid(row=7,column=0,columnspan=11,sticky="ew")
+
+# console_scroll=ttk.Scrollbar(app,orient=VERTICAL)
+# console_scroll.grid(row=7,column=11)
+
+
 statusbar = Label(app, text="POTA Field Logger is ALPHA quality - Not ready for real use",
                   bd=1, relief=SUNKEN, anchor=W)
-statusbar.grid(row=7, column=0, columnspan=11, sticky="ew")
+statusbar.grid(row=8, column=0, columnspan=11, sticky="ew")
 
 # Add some key bindings
 app.bind('<Return>', addentry)
