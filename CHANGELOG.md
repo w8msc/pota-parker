@@ -1,6 +1,6 @@
 # Changelog
 
-## Version 0.2.3, May 17, 2022
+## Version 0.2.23, May 17, 2022
 * Changed:  Fixed header adif fields for missing opening bracket
 
 ## Version 0.2.22, May 12, 2022

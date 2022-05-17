@@ -60,7 +60,7 @@ PLATFORM=platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.22'
+info['programversion'] = '0.2.23'
 info['programid'] = "POTA Field Logger"
 info['copyrightYear'] = '2022'
 logbook = []
