@@ -577,11 +577,11 @@ def writeADIF():
 
         # write ADIF header from globals
         outfile.write("Parks On The Air Field Logger\n")
-        outfile.write("PROGRAMID:{}>{}\n".format(
+        outfile.write("<PROGRAMID:{}>{}\n".format(
             len(info['programid']), info['programid']))
-        outfile.write("PROGRAMVERSION:{}>{}\n".format(
+        outfile.write("<PROGRAMVERSION:{}>{}\n".format(
             len(info['programversion']), info['programversion']))
-        outfile.write("CREATED_TIMESTAMP:13>{} {}".format(nowDate, nowTime))
+        outfile.write("<CREATED_TIMESTAMP:13>{} {}".format(nowDate, nowTime))
 
         # insert metadata headers for :
         #   rig, power, antenna, comments, county

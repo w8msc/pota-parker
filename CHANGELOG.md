@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.3, May 17, 2022
+* Changed:  Fixed header adif fields for missing opening bracket
+
 ## Version 0.2.22, May 12, 2022
 * Added: Print platform info in debug log
 ## Version 0.2.21, Feb 4, 2022
