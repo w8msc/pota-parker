@@ -56,7 +56,7 @@ validReferenceCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,"
 APPTITLE = "POTA Field Logger"
 # WINDOWSIZE="700x350"
 
-PLATFORM=platform.platform()
+PLATFORM = platform.platform()
 
 # Globals
 info = {}
@@ -158,17 +158,18 @@ def addentry(event=None):
         ))
         print(qsotext)
         logbook.append(qso)
-        
+
         # dump qso as string into text widget
-        temp=f'{qso["qso_date"]} {qso["time_on"]} {qso["call"]} {qso["band"]} {qso["mode"]}\n'
-        console_text.insert(END,temp)
+        temp = f'{qso["qso_date"]} {qso["time_on"]} {qso["call"]} {qso["band"]} {qso["mode"]}\n'
+        console_text.insert(END, temp)
         console_text.see('end')
-        
-        temp=(qso["qso_date"],qso["time_on"],qso["call"],qso["band"],qso["mode"])
-        
+
+        temp = (qso["qso_date"], qso["time_on"],
+                qso["call"], qso["band"], qso["mode"])
+
 #        tree.insert('',END, values=temp)
 #        tree.see('end')
-        
+
         logging.info(qsotext)
         print(qso)
         resetP2P()
@@ -344,19 +345,16 @@ def loggingModeCallback():
 
 def lockPark():
     """ Once the first QSO is recorded lock the park to prevent changes """
-
     pE.config(state='disabled')
 
 
 def lockStation():
     """ Once the first QSO is recorded lock the station callsign """
-
     stE.config(state='disabled')
 
 
 def modecallback(selection):
     """ Updates the MODE when the pulldown is changed """
-
     modeStr.set(selection)
 
 
@@ -431,19 +429,16 @@ def qsoToStr(qso):
 
 def resetCall():
     """ Clear the worked callsign textbox once the QSO is logged """
-
     cE.delete(0, END)
 
 
 def resetP2P():
     """ Clear the other station's park once the QSO is logged """
-
     p2pE.delete(0, END)
 
 
 def resetComment():
     """ Clear the comment field once the QSO is logged """
-
     comE.delete(0, END)
 
 
@@ -459,6 +454,7 @@ def updateDateTime():
     """ Update the date and time fields when the QSO gets added """
 
     now = datetime.datetime.utcnow()
+    # format the date and time per adif spec
     qso_date = ("%04d%02d%02d" % (now.year, now.month, now.day))
     time_on = ("%02d%02d%02d" % (now.hour, now.minute, now.second))
 
@@ -468,10 +464,6 @@ def updateDateTime():
 
 def updateStatusBar():
     """ Update the status bar with the total QSOs in the logbook """
-
-    #str="There are {} QSOs logged".format(len(logbook))
-    # show callsign of last station logged
-
     str = "Last station logged: {}   -   There are {} QSOs logged".format(
         logbook[-1]["call"],
         len(logbook)
@@ -526,7 +518,6 @@ def callbackTheirPark(*args):
 
 def warningMsg():
     """ Display an About message box """
-
     displayMsg = """Parker is ALPHA quality software!
     \n
 DO NOT USE THIS PROGRAM FOR REAL QSO LOGGING UNLESS YOU HAVE AN ALTERNATE LOGGING METHOD AVAILABLE!!"""
@@ -535,18 +526,16 @@ DO NOT USE THIS PROGRAM FOR REAL QSO LOGGING UNLESS YOU HAVE AN ALTERNATE LOGGIN
 
 def wipeQSO(event):
     """ Erase an unfinished QSO """
-
     resetCall()
     resetComment()
     resetP2P()
-    
+
     # focus back on hunter call sign entry
     cE.focus_set()
 
 
 def writeADIF():
     """ Writes the logbook to a ADI file """
-
     # file naming convention
     # STATION_CALLSIGN@REFERENCE_YYYYMMDD-HHMMSS.adif
     # w8msc@K-1234_20191201-123456.adi
@@ -608,7 +597,6 @@ def incDay(event):
 
 def decDay(event):
     """ decrements the day, wrap around at 0 """
-
     if dayInt.get() == 0:
         dayInt.set(31)
     else:
@@ -620,7 +608,6 @@ def decDay(event):
 
 def incHour(event):
     """ increments the hour, wrap around at 23 """
-
     if hourInt.get() == 23:
         hourInt.set(00)
     else:
@@ -632,7 +619,6 @@ def incHour(event):
 
 def decHour(event):
     """ decrements the hour, wrap around at 0 """
-
     if hourInt.get() == 0:
         hourInt.set(23)
     else:
@@ -644,7 +630,6 @@ def decHour(event):
 
 def incMinute(event):
     """ increments the minute, wrap around at 59 """
-
     if minuteInt.get() == 59:
         minuteInt.set(00)
     else:
@@ -656,7 +641,6 @@ def incMinute(event):
 
 def decMinute(event):
     """ decrements the minute, wrap around at 0 """
-
     if minuteInt.get() == 0:
         minuteInt.set(59)
     else:
@@ -668,7 +652,6 @@ def decMinute(event):
 
 def incSecond(event):
     """ increments the second, wrap around at 59 """
-
     if secondInt.get() == 59:
         secondInt.set(00)
     else:
@@ -680,7 +663,6 @@ def incSecond(event):
 
 def decSecond(event):
     """ decrements the second, wrap around at 00 """
-
     if secondInt.get() == 0:
         secondInt.set(59)
     else:
@@ -724,7 +706,7 @@ secondInt = IntVar()
 liveLogging = BooleanVar()
 liveLogging.set(True)
 
-app.title(f'{APPTITLE} {info["programversion"]}') 
+app.title(f'{APPTITLE} {info["programversion"]}')
 # app.geometry(WINDOWSIZE)
 
 # create the menubar
@@ -844,7 +826,6 @@ tree.configure(yscroll=tree_scroll_bar.set)
 tree_scroll_bar.grid(row=7,column=11,sticky='ns') """
 
 
-
 # console_frame = ttk.LabelFrame(app,text='Console')
 # console_frame.grid(row=7,column=0,columnspan=11,sticky='ew')
 
@@ -853,8 +834,8 @@ tree_scroll_bar.grid(row=7,column=11,sticky='ns') """
 # tree=ttk.Treeview(app)
 # tree.grid(row=7,column=0,columnspan=11,sticky="ew")
 
-console_text=Text(app,height=5)
-console_text.grid(row=7,column=0,columnspan=11,sticky="ew")
+console_text = Text(app, height=5)
+console_text.grid(row=7, column=0, columnspan=11, sticky="ew")
 
 # console_scroll=ttk.Scrollbar(app,orient=VERTICAL)
 # console_scroll.grid(row=7,column=11)
@@ -879,7 +860,7 @@ app.bind("<Control-Key-S>", decSecond)
 app.bind("<Control-Key-c>", focusCallsign)
 app.bind("<Control-Key-p>", focusPark)
 
-warningMsg()
+# warningMsg()
 displayTime()
 
 app.mainloop()
