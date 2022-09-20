@@ -22,6 +22,22 @@ Unzip the Parker archive to a folder on your computer.
 
 The parker executable does not need to be in your PATH.  The python libraries do need to be available, however.
 
+The Linux Mint default install is missing some packages.
+
+Install the missing packages:
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install python3-tkinter python3-websocket
+```
+
+Set Linux Mint to use python3 by default
+
+```
+sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+```
+
 For Linux you can make parker.py executable with
 
 chmod +x parker.py
