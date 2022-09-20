@@ -8,17 +8,29 @@
 
 import platform
 
+# Linux Mint does not install some packages by default
+
 try:
     import logging
-    import datetime
+except ImportError:
+    print("Missing dependancy: python3-websocket")
+    exit()
+
+try:
     from tkinter import *
     from tkinter import ttk
     from tkinter import messagebox
+except ImportError:
+    print("Missing dependancy: python3-tk")
+    exit()
+    
+try:
+    import datetime
     import os
     import json
     #import sqlite3
 except ImportError:
-    print("You are not using Python 3")
+    print("Unknown missing module")
     exit()
 
 validBands = ["1.25CM", "70CM", "2M", "4M",
@@ -60,7 +72,7 @@ PLATFORM = platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.23'
+info['programversion'] = '0.2.24'
 info['programid'] = "POTA Field Logger"
 info['copyrightYear'] = '2022'
 logbook = []
