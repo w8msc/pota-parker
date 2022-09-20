@@ -29,7 +29,7 @@ Install the missing packages:
 ```
 sudo apt update
 sudo apt upgrade
-sudo apt install python3-tkinter python3-websocket
+sudo apt install python3-tk python3-websocket
 ```
 
 Set Linux Mint to use python3 by default
