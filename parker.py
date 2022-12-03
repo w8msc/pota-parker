@@ -408,6 +408,9 @@ def qsoToStr(qso):
     if "sig_info" in qso:
         str += ("<SIG_INFO:{}>{} ".format(
             len(qso["sig_info"]), qso["sig_info"]))
+    if "comment" in qso:
+        str += ("<COMMENT:{}>{} ".format(
+            len(qso["comment"]), qso["comment"]))
     str += "<EOR>"
     return str
 
