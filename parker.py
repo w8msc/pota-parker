@@ -72,9 +72,9 @@ PLATFORM = platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.24'
+info['programversion'] = '0.2.25'
 info['programid'] = "POTA Field Logger"
-info['copyrightYear'] = '2022'
+info['copyrightYear'] = '2023'
 logbook = []
 
 # Store the Station callsign, park, and date of the first QSO
@@ -99,6 +99,11 @@ def aboutMsg():
     )
     messagebox.showinfo('About', displayMsg)
 
+def temp_msg():
+    """ Display a place-holder temp message box """
+    
+    display_message = "This function is not yet implemented"
+    messagebox.showinfo('About',display_message)
 
 def addentry(event=None):
     """ Add valid QSOs to the logbook """
@@ -727,7 +732,8 @@ app.title(f'{APPTITLE} {info["programversion"]}')
 # create the menubar
 menu = Menu(app)
 fileMenu = Menu(menu, tearoff=0)
-fileMenu.add_command(label="Open", command=clicked)
+fileMenu.add_command(label="Open a logbook", command=temp_msg)
+fileMenu.add_command(label="Save a logbook", command=temp_msg)
 fileMenu.add_command(label="Exit", command=goodbye)
 helpMenu = Menu(menu, tearoff=0)
 helpMenu.add_command(label="Help", command=displayHelpMsg)
