@@ -33,7 +33,7 @@ except ImportError:
     print("Unknown missing module")
     exit()
 
-validBands = ["1.25CM", "70CM", "2M", "4M",
+validBands = ["1.25M", "70CM", "2M", "4M",
               "6M", "10M", "12M", "15M", "17M",
               "20M", "30M", "40M", "60M", "80M", "160M"
               ]
@@ -72,7 +72,7 @@ PLATFORM = platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.25'
+info['programversion'] = '0.2.26'
 info['programid'] = "POTA Field Logger"
 info['copyrightYear'] = '2023'
 logbook = []
@@ -114,7 +114,7 @@ def addentry(event=None):
     cmd = callStr.get().upper()
     if cmd in validBands:
         setBand(cmd)
-        print(datetimeString() + " Setting mode to " + cmd)
+        print(datetimeString() + " Setting band to " + cmd)
         resetCall()
         return
 
