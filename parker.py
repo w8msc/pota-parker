@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # POTA Field Logger, "Parker"
-# Copyright 2022 Mike Case, W8MSC
+# Copyright 2022-2024 Mike Case, W8MSC
 
 # Basic field logging program
 # Takes the required minimum fields for a QSO and logs them to an ADIF
@@ -33,7 +33,7 @@ except ImportError:
     print("Unknown missing module")
     exit()
 
-validBands = ["1.25M", "70CM", "2M", "4M",
+validBands = [ "70CM", "1.25M", "2M", "4M",
               "6M", "10M", "12M", "15M", "17M",
               "20M", "30M", "40M", "60M", "80M", "160M"
               ]
@@ -42,15 +42,15 @@ validModes = [
     "CW", "FM", "SSB"
 ]
 
-validYears = [2016, 2017, 2018, 2019, 2020, 2021, 2022]
+validYears = [ 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 ]
 
-validMonths = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+validMonths = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
 
-validDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+validDays = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
 
-validHours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-              12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+validHours = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+              12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
 
 validMinutes = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
@@ -72,9 +72,9 @@ PLATFORM = platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.26'
+info['programversion'] = '0.2.27'
 info['programid'] = "POTA Field Logger"
-info['copyrightYear'] = '2023'
+info['copyrightYear'] = '2024'
 logbook = []
 
 # Store the Station callsign, park, and date of the first QSO
