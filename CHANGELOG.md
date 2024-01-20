@@ -1,5 +1,8 @@
 # Changelog
 
+## Version 0.2.26, Oct 22, 2023
+* Changed: Fix 1.25 to correct unit M
+
 ## Version 0.2.23, May 17, 2022
 * Changed:  Fixed header adif fields for missing opening bracket
 
