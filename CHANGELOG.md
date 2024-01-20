@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.2.26, Jan 19, 2024
+* Changed:  Fixed order of bands in drop-down list
+* Changed:  Update copyright year
+* Removed:  Junk files
+
 ## Version 0.2.23, May 17, 2022
 * Changed:  Fixed header adif fields for missing opening bracket
 
