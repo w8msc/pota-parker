@@ -1,34 +1,34 @@
 #!/usr/bin/env python3
 
 # POTA Field Logger, "Parker"
-# Copyright 2022-2024 Mike Case, W8MSC
+# Copyright 2022-2026 Mike Case, W8MSC
 
 # Basic field logging program
 # Takes the required minimum fields for a QSO and logs them to an ADIF
+
+import signal
 
 import platform
 
 # Linux Mint does not install some packages by default
 
-try:
-    import logging
-except ImportError:
-    print("Missing dependancy: python3-websocket")
-    exit()
+import logging
 
 try:
-    from tkinter import *
-    from tkinter import ttk
+    from tkinter import (
+        Tk, Menu, StringVar, IntVar, BooleanVar,
+        Label, Entry, Spinbox, OptionMenu, Radiobutton, Text, Button,
+        END, SUNKEN, W,
+    )
     from tkinter import messagebox
 except ImportError:
     print("Missing dependancy: python3-tk")
     exit()
-    
+
 try:
     import datetime
     import os
     import json
-    #import sqlite3
 except ImportError:
     print("Unknown missing module")
     exit()
@@ -42,26 +42,6 @@ validModes = [
     "CW", "FM", "SSB"
 ]
 
-validYears = [ 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 ]
-
-validMonths = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ]
-
-validDays = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31 ]
-
-validHours = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-              12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 ]
-
-validMinutes = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59
-]
-
-validSeconds = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29,
-    30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59
-]
-
 validCallsignCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/"
 validReferenceCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-,"
 
@@ -72,9 +52,9 @@ PLATFORM = platform.platform()
 
 # Globals
 info = {}
-info['programversion'] = '0.2.27'
+info['programversion'] = '0.3.0'
 info['programid'] = "POTA Field Logger"
-info['copyrightYear'] = '2024'
+info['copyrightYear'] = '2026'
 logbook = []
 
 # Store the Station callsign, park, and date of the first QSO
@@ -87,7 +67,6 @@ STARTDATETIME = ""
 logging.basicConfig(filename='parker.log', level=logging.DEBUG)
 logging.debug("Begin DEBUG logging")
 logging.debug("Platform: " + PLATFORM)
-
 
 def aboutMsg():
     """ Display an About message box """
@@ -159,16 +138,16 @@ def addentry(event=None):
         qsotext = (datetimeString() +
                    "QSO by station {} ".format(qso["station_callsign"]))
         if "operator" in qso:
-            qsotext + ("operator {}".format(qso["operator"]))
-        qsotext + (" on date {} at time {} at park {} with {} ".format(
+            qsotext += ("operator {}".format(qso["operator"]))
+        qsotext += (" on date {} at time {} at park {} with {} ".format(
             qso["qso_date"],
             qso["time_on"],
             qso["my_sig_info"],
             qso["call"],
         ))
         if "sig_info" in qso:
-            qsotext + ("their park {} ".format(qso["sig_info"]))
-        qsotext + (" on band {} using mode {} comment {}".format(
+            qsotext += ("their park {} ".format(qso["sig_info"]))
+        qsotext += (" on band {} using mode {} comment {}".format(
             qso["band"],
             qso["mode"],
             qso["comment"]
@@ -210,7 +189,7 @@ def checkRequiredFields():
     """ Checks that all the required fields for a QSO are set """
     # This will update some GUI controls for visual feedback when not set
 
-    goodtogo = TRUE
+    goodtogo = True
 
     # make sure station callsign field has something in it
     x = stE.get()
@@ -218,7 +197,7 @@ def checkRequiredFields():
         stE.config(bg='white')
     else:
         stE.config(bg='red')
-        goodtogo = FALSE
+        goodtogo = False
 
     # make sure park field has something in it
     x = pE.get()
@@ -226,7 +205,7 @@ def checkRequiredFields():
         pE.config(bg='white')
     else:
         pE.config(bg='red')
-        goodtogo = FALSE
+        goodtogo = False
 
     # make sure call sign being worked field has something in it
     x = cE.get()
@@ -234,7 +213,7 @@ def checkRequiredFields():
         cE.config(bg='white')
     else:
         cE.config(bg='red')
-        goodtogo = FALSE
+        goodtogo = False
 
     # make sure band field has something in it
     x = bandStr.get()
@@ -242,7 +221,7 @@ def checkRequiredFields():
         bL.config(bg=defBG)
     else:
         bL.config(bg="red")
-        goodtogo = FALSE
+        goodtogo = False
 
     # make sure mode field has something in it
     x = modeStr.get()
@@ -250,30 +229,13 @@ def checkRequiredFields():
         mL.config(bg=defBG)
     else:
         mL.config(bg="red")
-        goodtogo = FALSE
+        goodtogo = False
 
-    if goodtogo:
-        return TRUE
-    else:
-        return FALSE
-
-
-def clicked():
-    """ Test function for bindings """
-
-    global unsaved
-    unsaved = 1
-    print("Inside function clicked")
-
-
-def createDatabase():
-    """ Create the database if not exists """
-
-    print("Entered createDatabase")
+    return goodtogo
 
 
 def datetimeString():
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     return("{:04}{:02}{:02}-{:02}{:02}{:02}: ".format(now.year, now.month, now.day, now.hour, now.minute, now.second))
 
 
@@ -294,14 +256,13 @@ def displayHelpMsg():
     ENTER  Saves the current QSO
     """
 
-    helpWin = Frame()
     messagebox.showinfo('About', displayMsg)
 
 
 def displayTime():
     """ update the UTC and local time displays """
 
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     local = datetime.datetime.now()
 
     if liveLogging.get() is True:
@@ -379,72 +340,45 @@ def qsoToStr(qso):
     """ Convert a QSO dictionary to string """
     # switch if the optional p2p info is available
 
-    str = ""  # start with new string
+    line = ""  # start with new string
     if "station_callsign" in qso:
-        str += ("<STATION_CALLSIGN:{}>{} ".format(
+        line += ("<STATION_CALLSIGN:{}>{} ".format(
             len(qso["station_callsign"]), qso["station_callsign"]))
     if "operator" in qso:
-        str += ("<OPERATOR:{}>{} ".format(
+        line += ("<OPERATOR:{}>{} ".format(
             len(qso["operator"]), qso["operator"]))
     if "call" in qso:
-        str += ("<CALL:{}>{} ".format(
+        line += ("<CALL:{}>{} ".format(
             len(qso["call"]), qso["call"]))
     if "qso_date" in qso:
-        str += ("<QSO_DATE:{}>{} ".format(
+        line += ("<QSO_DATE:{}>{} ".format(
             len(qso["qso_date"]), qso["qso_date"]))
     if "time_on" in qso:
-        str += ("<TIME_ON:{}>{} ".format(
+        line += ("<TIME_ON:{}>{} ".format(
             len(qso["time_on"]), qso["time_on"]))
     if "band" in qso:
-        str += ("<BAND:{}>{} ".format(
+        line += ("<BAND:{}>{} ".format(
             len(qso["band"]), qso["band"]))
     if "mode" in qso:
-        str += ("<MODE:{}>{} ".format(
+        line += ("<MODE:{}>{} ".format(
             len(qso["mode"]), qso["mode"]))
     if "my_sig" in qso:
-        str += ("<MY_SIG:{}>{} ".format(
+        line += ("<MY_SIG:{}>{} ".format(
             len(qso["my_sig"]), qso["my_sig"]))
     if "my_sig_info" in qso:
-        str += ("<MY_SIG_INFO:{}>{} ".format(
+        line += ("<MY_SIG_INFO:{}>{} ".format(
             len(qso["my_sig_info"]), qso["my_sig_info"]))
     if "sig" in qso:
-        str += ("<SIG:{}>{} ".format(
+        line += ("<SIG:{}>{} ".format(
             len(qso["sig"]), qso["sig"]))
     if "sig_info" in qso:
-        str += ("<SIG_INFO:{}>{} ".format(
+        line += ("<SIG_INFO:{}>{} ".format(
             len(qso["sig_info"]), qso["sig_info"]))
     if "comment" in qso:
-        str += ("<COMMENT:{}>{} ".format(
+        line += ("<COMMENT:{}>{} ".format(
             len(qso["comment"]), qso["comment"]))
-    str += "<EOR>"
-    return str
-
-
-"""     if "sig_info" in qso:   # this one is for P2P qsos
-        str = ("<STATION_CALLSIGN:{}>{} ".format(len(qso["station_callsign"]), qso["station_callsign"]) +
-               "<OPERATOR:{}>{} ".format(len(qso["operator"]), qso["operator"]) +
-               "<CALL:{}>{} ".format(len(qso["call"]), qso["call"]) +
-               "<QSO_DATE:{}>{} ".format(len(qso["qso_date"]), qso["qso_date"]) +
-               "<TIME_ON:{}>{} ".format(len(qso["time_on"]), qso["time_on"]) +
-               "<BAND:{}>{} ".format(len(qso["band"]), qso["band"]) +
-               "<MODE:{}>{} ".format(len(qso["mode"]), qso["mode"]) +
-               "<MY_SIG:{}>{} ".format(len(qso["my_sig"]), qso["my_sig"]) +
-               "<MY_SIG_INFO:{}>{} ".format(len(qso["my_sig_info"]), qso["my_sig_info"]) +
-               "<SIG:{}>{} ".format(len(qso["sig"]), qso["sig"]) +
-               "<SIG_INFO:{}>{} ".format(len(qso["sig_info"]), qso["sig_info"]) +
-               "<EOR>")
-    else:   # this one if for non-P2P qsos
-        str = ("<STATION_CALLSIGN:{}>{} ".format(len(qso["station_callsign"]), qso["station_callsign"]) +
-               "<OPERATOR:{}>{} ".format(len(qso["operator"]), qso["operator"]) +
-               "<CALL:{}>{} ".format(len(qso["call"]), qso["call"]) +
-               "<QSO_DATE:{}>{} ".format(len(qso["qso_date"]), qso["qso_date"]) +
-               "<TIME_ON:{}>{} ".format(len(qso["time_on"]), qso["time_on"]) +
-               "<BAND:{}>{} ".format(len(qso["band"]), qso["band"]) +
-               "<MODE:{}>{} ".format(len(qso["mode"]), qso["mode"]) +
-               "<MY_SIG:{}>{} ".format(len(qso["my_sig"]), qso["my_sig"]) +
-               "<MY_SIG_INFO:{}>{} ".format(len(qso["my_sig_info"]), qso["my_sig_info"]) +
-               "<EOR>") """
-# return str
+    line += "<EOR>"
+    return line
 
 
 def resetCall():
@@ -473,7 +407,7 @@ def setMode(mode):
 def updateDateTime():
     """ Update the date and time fields when the QSO gets added """
 
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     # format the date and time per adif spec
     qso_date = ("%04d%02d%02d" % (now.year, now.month, now.day))
     time_on = ("%02d%02d%02d" % (now.hour, now.minute, now.second))
@@ -484,11 +418,11 @@ def updateDateTime():
 
 def updateStatusBar():
     """ Update the status bar with the total QSOs in the logbook """
-    str = "Last station logged: {}   -   There are {} QSOs logged".format(
+    msg = "Last station logged: {}   -   There are {} QSOs logged".format(
         logbook[-1]["call"],
         len(logbook)
     )
-    statusbar.config(text=str)
+    statusbar.config(text=msg)
 
 
 def callbackStationCallsign(*args):
@@ -562,7 +496,7 @@ def writeADIF():
 
     # TODO doublecheck target doesn't already exist and
 
-    now = datetime.datetime.utcnow()
+    now = datetime.datetime.now(datetime.timezone.utc)
     nowDate = ("%04d%02d%02d" % (now.year, now.month, now.day))
     nowTime = ("%02d%02d%02d" % (now.hour, now.minute, now.second))
 
@@ -582,23 +516,21 @@ def writeADIF():
 
         print("outfile = " + outputfile)
         # TODO check if the output file already exists
-        outfile = open(outputfile, 'w')
+        with open(outputfile, 'w') as outfile:
+            # write ADIF header from globals
+            outfile.write("Parks On The Air Field Logger\n")
+            outfile.write("<PROGRAMID:{}>{}\n".format(
+                len(info['programid']), info['programid']))
+            outfile.write("<PROGRAMVERSION:{}>{}\n".format(
+                len(info['programversion']), info['programversion']))
+            outfile.write("<CREATED_TIMESTAMP:13>{} {}".format(nowDate, nowTime))
 
-        # write ADIF header from globals
-        outfile.write("Parks On The Air Field Logger\n")
-        outfile.write("<PROGRAMID:{}>{}\n".format(
-            len(info['programid']), info['programid']))
-        outfile.write("<PROGRAMVERSION:{}>{}\n".format(
-            len(info['programversion']), info['programversion']))
-        outfile.write("<CREATED_TIMESTAMP:13>{} {}".format(nowDate, nowTime))
+            # insert metadata headers for :
+            #   rig, power, antenna, comments, county
 
-        # insert metadata headers for :
-        #   rig, power, antenna, comments, county
-
-        outfile.write("<EOH>\n")
-        for qso in logbook:
-            outfile.write(qsoToStr(qso)+'\n')
-        outfile.close()
+            outfile.write("<EOH>\n")
+            for qso in logbook:
+                outfile.write(qsoToStr(qso)+'\n')
     else:
         print("No QSOs in logged, skipping creation of the ADIF log file")
 
@@ -692,12 +624,26 @@ def decSecond(event):
     displayTime()
 
 
+def signal_handler(signum, frame):
+    """ Save the logbook to an ADIF file before the interpreter exits on SIGINT """
+    print("Caught SIGINT, saving logbook before exit")
+    writeADIF()
+    app.destroy()
+
 # create the GUI
 app = Tk()
 #app.master.title("POTA Field Logger")
 
 # qsoframe=LabelFrame(app,text="QSO Details",padx=5,pady=5)
 # qsoframe.pack(fill="both", expand="yes",padx=5,pady=5)
+
+
+# intercept control-c to allow Parker to save current log before shutting down
+signal.signal(signal.SIGINT, signal_handler)
+
+# intercept the window close button so the logbook is saved before shutting down
+app.protocol("WM_DELETE_WINDOW", goodbye)
+
 
 # assign types for the various inputs
 defBG = app.cget("background")
@@ -828,39 +774,8 @@ r2.grid(row=3, column=7)
 blankRow = Label(app, text=" ")
 blankRow.grid(row=6, column=0)
 
-""" columns=('Date','Time','Call','Band','Mode')
-tree=ttk.Treeview(app,columns=columns,show='headings')
-tree.heading('Date',text='Date')
-tree.column('Date',minwidth=0,width=80)
-tree.heading('Time',text='Time')
-tree.column('Time',minwidth=0,width=60)
-tree.heading('Call',text='Call')
-tree.column('Call',minwidth=0,width=120)
-tree.heading('Band',text='Band')
-tree.column('Band',minwidth=0,width=60)
-tree.heading('Mode',text='Mode')
-tree.column('Mode',minwidth=0,width=60)
-tree.grid(row=7,column=0,columnspan=11)
-
-tree_scroll_bar=ttk.Scrollbar(app,orient=VERTICAL,command=tree.yview)
-tree.configure(yscroll=tree_scroll_bar.set)
-tree_scroll_bar.grid(row=7,column=11,sticky='ns') """
-
-
-# console_frame = ttk.LabelFrame(app,text='Console')
-# console_frame.grid(row=7,column=0,columnspan=11,sticky='ew')
-
-# test_label=Label(console_frame,text='Test label').grid()
-
-# tree=ttk.Treeview(app)
-# tree.grid(row=7,column=0,columnspan=11,sticky="ew")
-
 console_text = Text(app, height=5)
 console_text.grid(row=7, column=0, columnspan=11, sticky="ew")
-
-# console_scroll=ttk.Scrollbar(app,orient=VERTICAL)
-# console_scroll.grid(row=7,column=11)
-
 
 statusbar = Label(app, text="POTA Field Logger is ALPHA quality - Not ready for real use",
                   bd=1, relief=SUNKEN, anchor=W)
