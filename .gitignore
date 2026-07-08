@@ -2,4 +2,5 @@
 snippets-parker.py
 *.adif
 *.tq8
+__pycache__/
 
